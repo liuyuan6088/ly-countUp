@@ -1,8 +1,8 @@
 {
   "name": "l-count-up",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "react ly-count-up",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --mode development",
@@ -24,6 +24,7 @@
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
     "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "css-loader": "^2.1.0",
     "html-webpack-plugin": "^3.2.0",
@@ -39,6 +40,7 @@
     "webpack-dev-server": "^3.2.1"
   },
   "dependencies": {
+    "rc-tween-one": "^2.3.4",
     "scss": "^0.2.4"
   }
 }

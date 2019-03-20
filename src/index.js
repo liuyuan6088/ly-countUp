@@ -1,40 +1,13 @@
 import React from 'react';
-
+import TweenOne from 'rc-tween-one';
+import { keeyDecimal, toMoney } from './utils';
 import "./index.scss";
 
 const PERCENT = '%';
 const MONEY = '元';
 const format = num => String(num).split('').filter(e => /^[0-9]*$/.test(String(e)));
 const spanNode = Array.from({ length: 10 }, (_, k) => k).map(e => <span key={e}>{e}</span>);
-const keeyDecimal = (num, n = 2) => {
-  let res = parseFloat(num);
-  if (!res) return 0;
-  res = Math.round(num * 10**n) / 10**n;
-  let x = res.toString();
-  let pos = x.indexOf('.');
-  if (pos < 0) {
-    pos = x.length;
-    x += '.';
-  }
-  while (x.length <= pos + n) {
-    x += '0';
-  }
-  return x;
-}
-const toMoney = num => {
-  const numArr = String(num).split('');
-  const pos = numArr.findIndex(v => v === '.');
-  const after = pos >= 0 ? numArr.slice(pos, numArr.length) : [];
-  const arr = pos >= 0 ? numArr.slice(0, pos) : numArr;
-  let res = [];
-  let count = 0;
-  for (let i = arr.length - 1; i >= 0; i--) {
-    count ++;
-    res.unshift(arr[i]);
-    if (count % 3 === 0 && i !== 0) res.unshift(',');
-  }
-  return res.concat(after).join('');
-}
+
 const fn = (num, type = 'num') => {
   if (type === 'percent') return +keeyDecimal(num);
   if (type === 'money') return toMoney(keeyDecimal(num));
@@ -53,7 +26,7 @@ export default class CountUp extends React.PureComponent {
   }
 
   componentDidMount(){
-    this.animation();
+    // this.animation();
   }
 
   static getDerivedStateFromProps(nextProps, preState) {
@@ -66,7 +39,7 @@ export default class CountUp extends React.PureComponent {
   }
 
   componentDidUpdate() {
-    this.animation();
+    // this.animation();
   }
 
   animation() {
@@ -95,17 +68,25 @@ export default class CountUp extends React.PureComponent {
     });
   }
 
-  renderLi() {
+  renderLi(arr) {
     const { start } = this.state;
-    const { type } = this.props
+    const { type, animation = {} } = this.props
     if (type === 'percent') {
       return (
         String(start).split('').map((e,i) => {
           if (/^[0-9]*$/.test(String(e))) {
             return (
-              <li className='num-li' style={{ top: 0 }} data-value={0} key={`${e}${i}`}>
+              <TweenOne key={`${e}${i}`} component="li" animation={
+                Object.assign({
+                  duration: 1000,
+                },
+                animation,
+                {
+                  top: arr[i],
+                })
+              }>
                 { spanNode }
-              </li>
+              </TweenOne>
             )
           }
           return (
@@ -122,9 +103,17 @@ export default class CountUp extends React.PureComponent {
         String(start).split('').map((e,i) => {
           if (/^[0-9]*$/.test(String(e))) {
             return (
-              <li className='num-li' style={{ top: 0 }} data-value={0} key={`${e}${i}`}>
+              <TweenOne key={`${e}${i}`} component="li" animation={
+                Object.assign({
+                  duration: 1000,
+                },
+                animation,
+                {
+                  top: arr[i],
+                })
+              }>
                 { spanNode }
-              </li>
+              </TweenOne>
             )
           }
           return (
@@ -137,18 +126,28 @@ export default class CountUp extends React.PureComponent {
     }
 
     return format(start).map((e,i) => (
-      <li className='num-li' style={{ top: 0 }} data-value={0} key={`${e}${i}`}>
+      <TweenOne key={`${e}${i}`} component="li" animation={
+        Object.assign({
+          duration: 1000,
+        },
+        animation,
+        {
+          top: arr[i],
+        })
+      }>
         { spanNode }
-      </li>
+      </TweenOne>
     ))
   }
 
   
 
   render() {
+    const { start } = this.state;
+    const arr = String(start).split('').map(e => /^[0-9]*$/.test(e) ? e*-30 : e)
     return (
       <ul ref={e => this.countUp = e} className={'countUp'}>
-        { this.renderLi() }
+        { this.renderLi(arr) }
       </ul>
     )
   }
